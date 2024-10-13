@@ -22,6 +22,17 @@ pub mod Counter {
         admin: ContractAddress
     }
 
+    #[event]
+    #[derive(Drop, starknet::Event)]
+    pub enum Event {
+        CountChanged: CountChanged,
+    }
+
+    #[derive(Drop, starknet::Event)]
+    pub struct CountChanged {
+        new_count: u64
+    }
+
     #[constructor]
     fn constructor(ref self: ContractState, admin_address: ContractAddress) {
         self.admin.write(admin_address);
@@ -37,6 +48,8 @@ pub mod Counter {
             assert(value > 0, 'zero value');
 
             self.count.write(self.count.read() + value);
+
+            self.emit(CountChanged { new_count: value });
         }
 
         fn get_count(self: @ContractState) -> u64 {
