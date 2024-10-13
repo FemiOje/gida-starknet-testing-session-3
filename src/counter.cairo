@@ -25,12 +25,12 @@ pub mod Counter {
     #[event]
     #[derive(Drop, starknet::Event)]
     pub enum Event {
-        CountChanged: CountChanged,
+        CountChangedEvent: CountChangedEvent,
     }
 
     #[derive(Drop, starknet::Event)]
-    pub struct CountChanged {
-        new_count: u64
+    pub struct CountChangedEvent {
+        pub new_count: u64
     }
 
     #[constructor]
@@ -49,7 +49,7 @@ pub mod Counter {
 
             self.count.write(self.count.read() + value);
 
-            self.emit(CountChanged { new_count: value });
+            self.emit(CountChangedEvent { new_count: value });
         }
 
         fn get_count(self: @ContractState) -> u64 {
